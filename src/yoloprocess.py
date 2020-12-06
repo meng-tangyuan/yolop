@@ -28,6 +28,7 @@ class YOLOP(object):
 		## put the output of yolo id mask into yolo_idmask               ##
 		## put the output of yolo id mask into yolo_scoremask            ##
 		###################################################################
+		self.yoloresult.rawimg = self.cvb.cv2_to_imgmsg(self.image)
 		self.yoloresult.idmask = self.cvb.cv2_to_imgmsg(yolo_idmask)
 		self.yoloresult.scoremask = self.cvb.cv2_to_imgmsg(yolo_scoremask)
 		self.pub.publish(self.yoloresult)
