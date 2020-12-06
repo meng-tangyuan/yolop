@@ -1,2 +1,5 @@
 # yolop
-This is a ros package
+This is a ros package. 
+'''
+catkin_make
+'''
