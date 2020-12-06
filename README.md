@@ -12,3 +12,9 @@ cd ..
 ```
 catkin_make
 ```
+Don't forget to source after building:
+```
+source ./devel/setup.bash
+```
+
+## Usage of code
