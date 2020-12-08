@@ -13,16 +13,17 @@ class YOLOP(object):
 		self.yoloresult = twoimgs()
 		self.cvb = CvBridge()
 
-		self.pub = rospy.Publisher('/masks', twoimgs,queue_size=10)
+		self.pub_id = rospy.Publisher('/Idmasks', Image,queue_size=10)
+		self.pub_score = rospy.Publisher('/Scoremasks', Image,queue_size=10)
 
-		rospy.Subscriber("/imgs",Image,self.callback)
+		rospy.Subscriber("/camera/image_raw",Image,self.callback,queue_size=1,buff_size=52428800)
 
 	def callback(self, msg):
 		rospy.loginfo('Image received...')
 		try:
 		    self.image = self.cvb.imgmsg_to_cv2(msg, "bgr8")
-            	except CvBridgeError as e:
-                    print(e)
+		except CvBridgeError as e:
+			print(e)
            	width = self.image.shape[0]
             	height = self.image.shape[1]
            	yolo_idmask = np.ones((width,height),np.uint8)
@@ -38,10 +39,14 @@ class YOLOP(object):
 		## 1. find the corner location of the bounding box (x1,y1), (x2, y2), ...
 		## 2. find the area inside the bounding box, colored them with id and score
 		###################################################################
-		self.yoloresult.rawimg = self.cvb.cv2_to_imgmsg(self.image)
-		self.yoloresult.idmask = self.cvb.cv2_to_imgmsg(yolo_idmask)
-		self.yoloresult.scoremask = self.cvb.cv2_to_imgmsg(yolo_scoremask)
-		self.pub.publish(self.yoloresult)
+		try:
+			self.yoloresult.rawimg = self.cvb.cv2_to_imgmsg(self.image,encoding = "mono8)
+			self.yoloresult.idmask = self.cvb.cv2_to_imgmsg(yolo_idmask,encoding = "mono8)
+			self.yoloresult.scoremask = self.cvb.cv2_to_imgmsg(yolo_scoremask)
+		except CvBridgeError as e:
+			print(e)			
+		self.pub_id.publish(self.yoloresult.idmask)
+		self.pub_score.publish(self.yoloresult.scoremask)
 		
 
 if __name__ == '__main__':
