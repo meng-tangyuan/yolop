@@ -27,7 +27,7 @@ class YOLOP(object):
             	height = self.image.shape[1]
            	yolo_idmask = np.ones((width,height),np.uint8)
             	yolo_idmask = yolo_idmask *255;
-            	yolo_scoremask = np.ones((width,height),np.uint8)
+            	yolo_scoremask = np.ones((width,height),np.float32)
             	yolo_scoremask = yolo_scoremask *255;
 		
 		###################################################################
